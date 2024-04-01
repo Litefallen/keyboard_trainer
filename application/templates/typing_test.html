@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        #dynamic-div {
+            width: 200px;
+            height: 200px;
+            background-color: lightblue;
+            transition: background-color 0.5s ease;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/styles.css')}}">
+    <title>Document</title>
+
+<title>Keetestr</title>
+</head>
+<header>Header</header>
+<body>
+<section id="words_string">
+    {%for i in range(words_list|list|count)%}
+    <span id={{i}}>{{words_list[i]}}</span>
+    {%endfor%}
+</section>
+
+<section id="typing_func">
+    <script>
+
+        async function loadListSequentially(letter) {
+        var args = {expected_key: letter}
+        var response = await fetch('http://127.0.0.1:5000//fetch_testing', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(args)
+            })
+        var data = await response.json();
+        return data['result']
+        }
+    let words_list = '{{words_list}}';
+    async function iterAtor(){
+    let false_keys = 0
+    var stat_data = {'accuracy':null, 'speed' : null}
+    var start = false;
+    for (i = 0; i<words_list.length; i++){
+        var result = await loadListSequentially(words_list[i])
+        if (!start){
+            start = new Date().getTime();
+        }
+        var let_id = `${i}`;
+        var cur_letter = document.getElementById(let_id);
+        if(result == 'stopit'){
+            break;
+        }
+        if(!result){
+            cur_letter.style.color = 'red';
+            false_keys++;
+        }
+        if(result){
+            cur_letter.style.color = 'green';
+        }
+        var res_section = document.getElementById('typing_func');
+        res_section.innerHTML = result;
+    }
+    var end = new Date().getTime();;
+    var res_section = document.getElementById('typing_func');
+    accuracy = Number(100 -(100/words_list.length * false_keys));
+    stat_data.accuracy = accuracy;
+    stat_data.speed = Number(((end - start)/1000).toFixed(2));
+    var stat_res = await fetch('http://127.0.0.1:5000//get_stat_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(stat_data)
+            })
+    stat_stat_res = await stat_res.json()
+    // res_section.innerHTML = JSON.stringify(stat_stat_res);
+    // res_section.innerHTML = JSON.stringify(stat_data);
+    res_section.innerHTML = JSON.stringify(stat_data.speed);
+    }
+     iterAtor();
+    </script>
+
+</section>
+</body>
+<footer>Footer</footer>
+
+</html>
