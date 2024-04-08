@@ -1,10 +1,12 @@
+import flask
 from flask import Blueprint, redirect, url_for,render_template,request
 from .words import json_words_dict, words_taking
 from .key_listener import randdom_func
-# from flask_login import UserMixin
-from .database import get_db
+from flask_login import login_user, current_user
+from .database import get_db, add_user,get_user
+from .models import User
 from datetime import datetime
-from flask import flash, get_flashed_messages
+from flask import flash
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -12,26 +14,28 @@ from werkzeug.security import generate_password_hash, check_password_hash
 auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/login', methods = ['POST', 'GET'])
 def login():
+
     print('login request page')
     if request.method == 'POST':
-        import hashlib
-        email = request.form['email']
+        email = request.form['email'].strip()
         password = str(request.form['password'])
-        # hex_pwd = 'danie@gmail.com'
-        
-        cursor = get_db().cursor()
-        query = "select * from users where email == (?)"
-        cursor.execute(query,(email,))
-        user_from_db = [column for column in cursor.fetchall()[0]]
-        if not user_from_db:
+        try:
+            user = get_user(email)
+        except AttributeError:
+            user = False
+            return user 
+        if not user:
             flash(message='There is no users with this email',category='error')
-            return render_template('login.html')
-        elif not check_password_hash(user_from_db[2], password):
-            flash(message='Wrong password',category='error')
-            return render_template('login.html')
         else:
-            print('Login was successful')
-            return render_template('login.html')
+            if not check_password_hash(user.password, password):
+                flash(message='Wrong password',category='error')
+            else:
+                login_user(user)
+                # next = flask.request.args.get('next')
+                # print('Login was successful!')
+                # # if not url_has_allowed_host_and_scheme(next, request.host):
+                # #     return flask.abort(400)
+                return redirect(url_for('admin.admin_panel'))
     return render_template('login.html')
     
 
@@ -39,8 +43,6 @@ def login():
 @auth_bp.route('/signup', methods = ['POST', 'GET'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
         password = str(request.form['password'])
         if password != request.form['retype_password']:
             print('error, error')
@@ -50,17 +52,13 @@ def signup():
             print('error, error')
             flash('Passwords length should be not less than 6 characters',category='error')
             return render_template('signup.html')
-        # print(type(username), email, type(password))
-        # user = UserMixin()
         else:
-            cursor = get_db().cursor()
             hshd_pwd = generate_password_hash(password)
-            query = "insert into users(username, email, password, date_created) values(?,?,?,?)"
-            cursor.execute(query,(username, email, hshd_pwd, datetime.now()))
-            get_db().commit()
+            user = User(name = request.form['username'], email = str(request.form['email'].strip()), password = hshd_pwd)
+            add_user([user])
+            flash(message='The registration was successful!', category='success')
             return redirect(url_for("auth.login"))
 
-        # print(request.form)
     return render_template('signup.html')
     
     # print(request.method)
@@ -101,3 +99,21 @@ def get_stat_data():
     # print(data['speed'])
     return data
     # add data to database
+
+@views.route('/')
+def home():
+    # user = UserMixin()
+    # user = user.get_id()
+    # print(user)
+    return 'user'
+    
+
+
+admin_bp = Blueprint('admin',__name__)
+@admin_bp.route('/admin', methods = ['GET', 'POST'])
+def admin_panel():
+    email = 'nolife0808@gmail.com'
+    try:
+        return current_user
+    except AttributeError:
+        return 'No user with such email'
