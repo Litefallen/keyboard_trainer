@@ -3,6 +3,7 @@ from flask import Flask
 from .blueprints import auth_bp,user_profile_bp,views, admin_bp
 from flask_login import LoginManager
 from .models import User
+from .database import get_user
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -32,5 +33,5 @@ def create_app(test_config=None):
     login_manager.init_app(app)
     @login_manager.user_loader
     def load_user(user_id):
-        return User.get(user_id)
+        return get_user('id', user_id)
     return app

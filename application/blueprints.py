@@ -2,8 +2,8 @@ import flask
 from flask import Blueprint, redirect, url_for,render_template,request
 from .words import json_words_dict, words_taking
 from .key_listener import randdom_func
-from flask_login import login_user, current_user
-from .database import get_db, add_user,get_user
+from flask_login import login_user, current_user, login_required, logout_user
+from .database import get_db, add_user,get_user,update_data
 from .models import User
 from datetime import datetime
 from flask import flash
@@ -20,7 +20,7 @@ def login():
         email = request.form['email'].strip()
         password = str(request.form['password'])
         try:
-            user = get_user(email)
+            user = get_user('email',email)
         except AttributeError:
             user = False
             return user 
@@ -30,12 +30,8 @@ def login():
             if not check_password_hash(user.password, password):
                 flash(message='Wrong password',category='error')
             else:
-                login_user(user)
-                # next = flask.request.args.get('next')
-                # print('Login was successful!')
-                # # if not url_has_allowed_host_and_scheme(next, request.host):
-                # #     return flask.abort(400)
-                return redirect(url_for('admin.admin_panel'))
+                login_user(user, remember=True)
+                return redirect(url_for('views.something'))
     return render_template('login.html')
     
 
@@ -60,60 +56,44 @@ def signup():
             return redirect(url_for("auth.login"))
 
     return render_template('signup.html')
-    
-    # print(request.method)
 
 
-@auth_bp.route('/logout')
+
+@auth_bp.route('/logout',methods = ['GET', 'POST'])
+@login_required
 def logout():
+    logout_user()
     return redirect(url_for('main'))
 
 user_profile_bp = Blueprint('profile', __name__)
 @user_profile_bp.route('/profile')
+@login_required
 def profile():
     return 'profile_page'
 
 views = Blueprint('views', __name__)
 
-@views.route('/typing_test') # main page
+@views.route('/typing_test', methods = ["GET", "POST"]) # main page
 def main():
-    words_list = words_taking('z', 1)
-    words_list = ' '.join(words_list).replace(' ','_')
-    return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+    if request.method == 'POST':
+        if request.headers['title']=='key_listener':
+            key = request.get_json()
+            exp_key = key['expected_key']
+            key_test = randdom_func
+            res = key_test(exp_key)
+            return res
+        if request.headers['title']=='stats':
+            stats = request.get_json()
+            return stats
 
-@views.route('/fetch_testing/', methods =['post']) # get the expected key, listen for keypress and check the pressed key
-def f_testing():
-    key = request.get_json()
-    exp_key = key['expected_key']
-    key_test = randdom_func
-    res = key_test(exp_key)
-    return res
-
-
-@views.route('/get_stat_data', methods = ['post'])
-def get_stat_data():
-    data = request.get_json()
-    print(data)
-    # data['speed'] = data['end'] - data['start']
-    # data['speed'] = str(datetime.fromisoformat(data['end']) - datetime.fromisoformat(data['start']))
-    # print(data['speed'])
-    return data
-    # add data to database
-
-@views.route('/')
-def home():
-    # user = UserMixin()
-    # user = user.get_id()
-    # print(user)
-    return 'user'
-    
+    else:
+        words_list = words_taking('z', 1)
+        words_list = ' '.join(words_list).replace(' ','_')
+        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
 
 
 admin_bp = Blueprint('admin',__name__)
 @admin_bp.route('/admin', methods = ['GET', 'POST'])
 def admin_panel():
-    email = 'nolife0808@gmail.com'
-    try:
-        return current_user
-    except AttributeError:
-        return 'No user with such email'
+    update_data('nolife0808@gmail.com')
+    return '1'

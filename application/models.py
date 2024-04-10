@@ -11,4 +11,7 @@ class User(Base, UserMixin):
     email = sqla.Column(sqla.String, nullable=False, unique=True)
     password = sqla.Column(sqla.String(150), nullable=False)
     date_created = sqla.Column(sqla.String, default=datetime.now().astimezone())
+    wpm = sqla.Column(sqla.FLOAT, default=100)
+    accuracy = sqla.Column(sqla.FLOAT, default=100)
+
 

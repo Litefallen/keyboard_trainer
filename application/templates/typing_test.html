@@ -31,10 +31,11 @@
 
         async function loadListSequentially(letter) {
         var args = {expected_key: letter}
-        var response = await fetch('http://127.0.0.1:5000//fetch_testing', {
+        var response = await fetch('http://127.0.0.1:5000//typing_test', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'title': 'key_listener'
                 },
                 body: JSON.stringify(args)
             })
@@ -44,7 +45,7 @@
     let words_list = '{{words_list}}';
     async function iterAtor(){
     let false_keys = 0
-    var stat_data = {'accuracy':null, 'speed' : null}
+    var stat_data = {'accuracy':null, 'wpm' : null}
     var start = false;
     for (i = 0; i<words_list.length; i++){
         var result = await loadListSequentially(words_list[i])
@@ -70,11 +71,12 @@
     var res_section = document.getElementById('typing_func');
     accuracy = Number(100 -(100/words_list.length * false_keys));
     stat_data.accuracy = accuracy;
-    stat_data.speed = Number(((end - start)/1000).toFixed(2));
-    var stat_res = await fetch('http://127.0.0.1:5000//get_stat_data', {
+    stat_data.wpm = Number(((end - start)/1000).toFixed(2));
+    var stat_res = await fetch('http://127.0.0.1:5000//typing_test', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'title':'stats'
                 },
                 body: JSON.stringify(stat_data)
             })

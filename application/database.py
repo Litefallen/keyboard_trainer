@@ -10,16 +10,9 @@ from .models import Base, User
 engine = sqla.create_engine('sqlite:///instance/application.sqlite', echo=True)
 
 def get_db():
-    # engine = sqlalchemy.create_engine('sqlite:///instance/application.sqlite', echo=True)
     session = Session(engine)
     return session
 
-
-def close_db(e=None):
-    db = g.pop('db', None)
-
-    if db is not None:
-        db.close()
 
 
 def init_db():
@@ -33,7 +26,18 @@ def add_user(user:list):
     session.commit()
     print('the user has been added')
 
-def get_user(email:str):
+def get_user(field:str,value:str):
     session = get_db()
-    res = session.scalar(sqla.select(User).where(User.email==email))
-    return res
+    print(field, value)
+    condition = f"User.{field}=='{str(value)}'"
+    user = eval(f'session.scalar(sqla.select(User).where({condition}))')
+    return user
+def update_data(current_user):
+    email = 'nolife0808@gmail.com'
+    session = get_db()
+    user = get_user('email','nolife0808@gmail.com')
+    user.email = 'aafsdasaf'
+    session.commit()
+    print(user.name)
+    # session.scalar(sqla.update(User)).where(User.email == email).values(email = 'askljhfadlkjhfadlkjhadf')
+    return 'All done!'
