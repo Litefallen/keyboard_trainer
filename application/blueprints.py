@@ -3,11 +3,13 @@ from flask import Blueprint, redirect, url_for,render_template,request
 from .words import json_words_dict, words_taking
 from .key_listener import randdom_func
 from flask_login import login_user, current_user, login_required, logout_user
-from .database import get_db, add_user,get_user,update_data
+from .database import  add_user,update_user_data,get_user_by_email
 from .models import User
 from datetime import datetime
 from flask import flash
 from werkzeug.security import generate_password_hash, check_password_hash
+import sqlalchemy as sqla
+# from .database import session
 
 
 
@@ -20,7 +22,7 @@ def login():
         email = request.form['email'].strip()
         password = str(request.form['password'])
         try:
-            user = get_user('email',email)
+            user = get_user_by_email(email)
         except AttributeError:
             user = False
             return user 
@@ -31,7 +33,7 @@ def login():
                 flash(message='Wrong password',category='error')
             else:
                 login_user(user, remember=True)
-                return redirect(url_for('views.something'))
+                return redirect(url_for('admin.admin_panel'))
     return render_template('login.html')
     
 
@@ -39,6 +41,11 @@ def login():
 @auth_bp.route('/signup', methods = ['POST', 'GET'])
 def signup():
     if request.method == 'POST':
+        user = get_user_by_email(request.form['email'])
+        if user:
+            print('error, error')
+            flash(message='There already is a user with this email',category='error')
+            return render_template('signup.html')
         password = str(request.form['password'])
         if password != request.form['retype_password']:
             print('error, error')
@@ -51,9 +58,13 @@ def signup():
         else:
             hshd_pwd = generate_password_hash(password)
             user = User(name = request.form['username'], email = str(request.form['email'].strip()), password = hshd_pwd)
-            add_user([user])
+            add_user(user)
+            login_user(user, remember=True)
+
             flash(message='The registration was successful!', category='success')
-            return redirect(url_for("auth.login"))
+            # return redirect(url_for("admin.admin_panel"))
+            return redirect(url_for("views.main"))
+
 
     return render_template('signup.html')
 
@@ -63,13 +74,20 @@ def signup():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main'))
+    flash('You have been logged out.')
+    return redirect(url_for('auth.login'))
 
 user_profile_bp = Blueprint('profile', __name__)
 @user_profile_bp.route('/profile')
 @login_required
 def profile():
     return 'profile_page'
+
+
+@user_profile_bp.route('/update_data', methods = ['GET', 'POST'])
+def update_data():
+    return update_user_data(current_user)
+
 
 views = Blueprint('views', __name__)
 
@@ -84,7 +102,11 @@ def main():
             return res
         if request.headers['title']=='stats':
             stats = request.get_json()
-            return stats
+            print(stats)
+            user_mail =current_user.email
+            print(user_mail)
+            return update_user_data(user_mail,stats)
+            # return stats
 
     else:
         words_list = words_taking('z', 1)
@@ -95,5 +117,5 @@ def main():
 admin_bp = Blueprint('admin',__name__)
 @admin_bp.route('/admin', methods = ['GET', 'POST'])
 def admin_panel():
-    update_data('nolife0808@gmail.com')
-    return '1'
+    # return get_user_by_email('jo@gmail.com').email
+    return current_user.email

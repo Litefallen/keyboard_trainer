@@ -1,18 +1,21 @@
 import sqlite3
+import psycopg2
 import uuid
 import click
-from flask import current_app, g
+# from flask import current_app, g
 import sqlalchemy as sqla
 from sqlalchemy.orm import Session
 from .models import Base, User
-
+from sqlalchemy.engine import URL
 
 engine = sqla.create_engine('sqlite:///instance/application.sqlite', echo=True)
 
-def get_db():
-    session = Session(engine)
-    return session
 
+def session_decorator(func):
+    with Session(engine) as session:
+        def session_wrapper(*args):
+            return func(*args,session)
+    return session_wrapper
 
 
 def init_db():
@@ -20,24 +23,37 @@ def init_db():
     Base.metadata.create_all(engine)
     print('Database inintialized and tables has been createad')
 
-def add_user(user:list):
-    session = get_db()
-    session.add_all(user)
+@session_decorator
+def add_user(user,session):
+    session.add(user)
     session.commit()
     print('the user has been added')
 
-def get_user(field:str,value:str):
-    session = get_db()
-    print(field, value)
-    condition = f"User.{field}=='{str(value)}'"
-    user = eval(f'session.scalar(sqla.select(User).where({condition}))')
+@session_decorator
+def get_user(id:str,session):
+    return session.get(User, id)
+
+@session_decorator
+def get_user_by_email(email:str,session):
+    user = session.scalars(sqla.select(User).where(User.email == email)).first()
     return user
-def update_data(current_user):
-    email = 'nolife0808@gmail.com'
-    session = get_db()
-    user = get_user('email','nolife0808@gmail.com')
-    user.email = 'aafsdasaf'
+
+@session_decorator
+def update_user_data(user_mail,stats,session):
+    user = session.scalars(sqla.select(User).where(User.email == user_mail)).first()
+    if not user.accuracy:
+        print('First test!')
+        user.symbol_p_sec = str(stats['symbol_p_sec'])
+        user.accuracy = str(stats['accuracy'])
+        session.commit()
+    else:
+        print('It is not the first test!')
+        user.accuracy = user.accuracy + f" {stats['accuracy']}"
+        user.symbol_p_sec = user.symbol_p_sec + f" {stats['symbol_p_sec']}"
+        session.commit()
+
+    # user.symbol_p_sec = stats['symbol_p_sec']
+
+    # user.name = '12213123123213'
     session.commit()
-    print(user.name)
-    # session.scalar(sqla.update(User)).where(User.email == email).values(email = 'askljhfadlkjhfadlkjhadf')
     return 'All done!'

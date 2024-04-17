@@ -45,7 +45,7 @@
     let words_list = '{{words_list}}';
     async function iterAtor(){
     let false_keys = 0
-    var stat_data = {'accuracy':null, 'wpm' : null}
+    var stat_data = {'accuracy':null, 'symbol_p_sec' : null}
     var start = false;
     for (i = 0; i<words_list.length; i++){
         var result = await loadListSequentially(words_list[i])
@@ -69,9 +69,10 @@
     }
     var end = new Date().getTime();;
     var res_section = document.getElementById('typing_func');
-    accuracy = Number(100 -(100/words_list.length * false_keys));
+    accuracy = Number(100 -(100/words_list.length * false_keys).toFixed(2));
     stat_data.accuracy = accuracy;
-    stat_data.wpm = Number(((end - start)/1000).toFixed(2));
+    speed = Number(((end - start)/1000).toFixed(2));
+    stat_data.symbol_p_sec = words_list.length*(60/speed).toFixed(0);
     var stat_res = await fetch('http://127.0.0.1:5000//typing_test', {
                 method: 'POST',
                 headers: {
@@ -83,7 +84,7 @@
     stat_stat_res = await stat_res.json()
     // res_section.innerHTML = JSON.stringify(stat_stat_res);
     // res_section.innerHTML = JSON.stringify(stat_data);
-    res_section.innerHTML = JSON.stringify(stat_data.speed);
+    res_section.innerHTML = JSON.stringify(stat_data.symbol_p_sec);
     }
      iterAtor();
     </script>
