@@ -20,6 +20,15 @@
 </head>
 <header>Header</header>
 <body>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashes>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
 <section id="words_string">
     {%for i in range(words_list|list|count)%}
     <span id={{i}}>{{words_list[i]}}</span>
@@ -42,8 +51,21 @@
         var data = await response.json();
         return data['result']
         }
+        var press_enter = false;
+        var res_section = document.getElementById('typing_func');
+        res_section.innerHTML = 'Press <Enter> to start typing test';
+
+        async function to_Start(){
+            press_enter = await loadListSequentially('enter');
+            if (press_enter==false){
+                // res_section.innerHTML = press_enter;
+                await to_Start();
+            }
+            else{res_section.style.display = 'none';}
+        }
     let words_list = '{{words_list}}';
     async function iterAtor(){
+    await to_Start()
     let false_keys = 0
     var stat_data = {'accuracy':null, 'symbol_p_sec' : null}
     var start = false;
@@ -68,7 +90,7 @@
         res_section.innerHTML = result;
     }
     var end = new Date().getTime();;
-    var res_section = document.getElementById('typing_func');
+    // var res_section = document.getElementById('typing_func');
     accuracy = Number(100 -(100/words_list.length * false_keys).toFixed(2));
     stat_data.accuracy = accuracy;
     speed = Number(((end - start)/1000).toFixed(2));
@@ -86,6 +108,8 @@
     // res_section.innerHTML = JSON.stringify(stat_data);
     res_section.innerHTML = JSON.stringify(stat_data.symbol_p_sec);
     }
+    // else{iterAtor()}
+    // }
      iterAtor();
     </script>
 

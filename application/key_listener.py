@@ -4,17 +4,23 @@ import timeit
 
 def randdom_func(expected_key):
     the_key = None
-    # expected_key = 'i'
+    print(expected_key)
     def on_press(key):
         try:
             nonlocal the_key
             the_key = key.char
-            if key == keyboard.Key.esc:
-                return 'stopit'
-            # print(f'the key is {key}')
+            print(f'the key is {key}')
             return False
         except AttributeError:
-            print(f'special key {key} pressed')
+            the_key = key.name
+            print(the_key == expected_key)
+            if key.name == 'esc':
+                exit()
+            print(key.name)
+            return False
+
+            # print(f'special key {key} pressed')
+            # exit()
 
     # def on_release(key):
     #     if key == keyboard.Key.esc:

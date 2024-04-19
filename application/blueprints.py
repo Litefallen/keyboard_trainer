@@ -2,7 +2,7 @@ import flask
 from flask import Blueprint, redirect, url_for,render_template,request
 from .words import json_words_dict, words_taking
 from .key_listener import randdom_func
-from flask_login import login_user, current_user, login_required, logout_user
+from flask_login import login_user, current_user, login_required, logout_user, user_unauthorized
 from .database import  add_user,update_user_data,get_user_by_email
 from .models import User
 from datetime import datetime
@@ -101,14 +101,19 @@ def main():
             res = key_test(exp_key)
             return res
         if request.headers['title']=='stats':
-            stats = request.get_json()
-            print(stats)
-            user_mail =current_user.email
-            print(user_mail)
-            return update_user_data(user_mail,stats)
-            # return stats
+            if current_user.is_authenticated:
+                stats = request.get_json()
+                print(stats)
+                user_mail =current_user.email
+                return update_user_data(user_mail,stats)
 
-    else:
+            else:
+                print('unauthorized user')
+                flash("Until you're logged in, you are not able to view your statistics",category='error')
+                return 
+
+
+    if request.method == 'GET':
         words_list = words_taking('z', 1)
         words_list = ' '.join(words_list).replace(' ','_')
         return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
@@ -118,4 +123,4 @@ admin_bp = Blueprint('admin',__name__)
 @admin_bp.route('/admin', methods = ['GET', 'POST'])
 def admin_panel():
     # return get_user_by_email('jo@gmail.com').email
-    return current_user.email
+    return 'aaaaaa'
