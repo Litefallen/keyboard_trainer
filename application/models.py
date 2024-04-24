@@ -11,7 +11,7 @@ class User(Base, UserMixin):
     email = sqla.Column(sqla.String, nullable=False, unique=True)
     password = sqla.Column(sqla.String(150), nullable=False)
     date_created = sqla.Column(sqla.String, default=datetime.now().astimezone())
-    symbol_p_sec = sqla.Column(sqla.String, default=None)
+    symbol_p_minute = sqla.Column(sqla.String, default=None)
     # symbol_p_sec = sqla.Column(sqla.Tuple, default=0)
     accuracy = sqla.Column(sqla.String, default=None)
 

@@ -49,10 +49,10 @@ def update_user_data(user_mail,stats,session):
     else:
         print('It is not the first test!')
         user.accuracy = user.accuracy + f" {stats['accuracy']}"
-        user.symbol_p_sec = user.symbol_p_sec + f" {stats['symbol_p_sec']}"
+        user.symbol_p_minute = user.symbol_p_minute + f" {stats['symbol_p_minute']}"
         session.commit()
 
-    # user.symbol_p_sec = stats['symbol_p_sec']
+    # user.symbol_p_minute = stats['symbol_p_minute']
 
     # user.name = '12213123123213'
     session.commit()

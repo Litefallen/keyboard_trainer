@@ -1,10 +1,5 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+{% extends "base.html" %}
+    {% block head %}
     <style>
         #dynamic-div {
             width: 200px;
@@ -14,28 +9,21 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/styles.css')}}">
-    <title>Document</title>
+    <title>Typing_test</title>
+    {%endblock%}
 
-<title>Keetestr</title>
-</head>
-<header>Header</header>
-<body>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <ul class=flashes>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  {% endwith %}
+    {%block main_content%}
+
+<div id="words_string_wrapper">
 <section id="words_string">
     {%for i in range(words_list|list|count)%}
-    <span id={{i}}>{{words_list[i]}}</span>
+    <!-- <span id={{i}}>{{words_list[i]}}</span> -->
+    <kbd id={{i}}>{{words_list[i]}}</kbd>
+
     {%endfor%}
 </section>
-
-<section id="typing_func">
+</div>
+<article id="typing_func">
     <script>
 
         async function loadListSequentially(letter) {
@@ -53,12 +41,11 @@
         }
         var press_enter = false;
         var res_section = document.getElementById('typing_func');
-        res_section.innerHTML = 'Press <Enter> to start typing test';
+        res_section.innerHTML = 'Press Enter to start typing test';
 
         async function to_Start(){
             press_enter = await loadListSequentially('enter');
             if (press_enter==false){
-                // res_section.innerHTML = press_enter;
                 await to_Start();
             }
             else{res_section.style.display = 'none';}
@@ -67,7 +54,7 @@
     async function iterAtor(){
     await to_Start()
     let false_keys = 0
-    var stat_data = {'accuracy':null, 'symbol_p_sec' : null}
+    var stat_data = {'accuracy':null, 'symbol_p_minute' : null}
     var start = false;
     for (i = 0; i<words_list.length; i++){
         var result = await loadListSequentially(words_list[i])
@@ -94,7 +81,7 @@
     accuracy = Number(100 -(100/words_list.length * false_keys).toFixed(2));
     stat_data.accuracy = accuracy;
     speed = Number(((end - start)/1000).toFixed(2));
-    stat_data.symbol_p_sec = words_list.length*(60/speed).toFixed(0);
+    stat_data.symbol_p_minute = words_list.length*(60/speed).toFixed(0);
     var stat_res = await fetch('http://127.0.0.1:5000//typing_test', {
                 method: 'POST',
                 headers: {
@@ -106,15 +93,12 @@
     stat_stat_res = await stat_res.json()
     // res_section.innerHTML = JSON.stringify(stat_stat_res);
     // res_section.innerHTML = JSON.stringify(stat_data);
-    res_section.innerHTML = JSON.stringify(stat_data.symbol_p_sec);
+    res_section.innerHTML = JSON.stringify(stat_data.symbol_p_minute);
     }
     // else{iterAtor()}
     // }
      iterAtor();
     </script>
 
-</section>
-</body>
-<footer>Footer</footer>
-
-</html>
+</article>
+{%endblock%}

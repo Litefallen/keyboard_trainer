@@ -9,6 +9,7 @@ from datetime import datetime
 from flask import flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlalchemy as sqla
+import webbrowser
 # from .database import session
 
 
@@ -33,7 +34,7 @@ def login():
                 flash(message='Wrong password',category='error')
             else:
                 login_user(user, remember=True)
-                return redirect(url_for('admin.admin_panel'))
+                return redirect(url_for('profile.profile'))
     return render_template('login.html')
     
 
@@ -60,9 +61,7 @@ def signup():
             user = User(name = request.form['username'], email = str(request.form['email'].strip()), password = hshd_pwd)
             add_user(user)
             login_user(user, remember=True)
-
             flash(message='The registration was successful!', category='success')
-            # return redirect(url_for("admin.admin_panel"))
             return redirect(url_for("views.main"))
 
 
@@ -75,13 +74,18 @@ def signup():
 def logout():
     logout_user()
     flash('You have been logged out.')
-    return redirect(url_for('auth.login'))
+    return redirect(url_for("views.main"))
 
 user_profile_bp = Blueprint('profile', __name__)
-@user_profile_bp.route('/profile')
+@user_profile_bp.route('/profile', methods=['GET','POST'])
 @login_required
 def profile():
-    return 'profile_page'
+    user = get_user_by_email(current_user.email)
+    avg_accuracy = [float(i) for i in user.accuracy.split()]
+    avg_accuracy = round(sum(avg_accuracy)/len(avg_accuracy),1)
+    avg_symbol_p_minute = [float(i) for i in user.symbol_p_minute.split()]
+    avg_symbol_p_minute = round(sum(avg_symbol_p_minute)/len(avg_symbol_p_minute),1)
+    return render_template('profile.html', user = user, avg_accuracy = avg_accuracy,avg_symbol_p_minute= avg_symbol_p_minute)
 
 
 @user_profile_bp.route('/update_data', methods = ['GET', 'POST'])
@@ -90,9 +94,13 @@ def update_data():
 
 
 views = Blueprint('views', __name__)
+@views.route('/')
+def main():
+    return render_template('main_page.html')
+
 
 @views.route('/typing_test', methods = ["GET", "POST"]) # main page
-def main():
+def typing_test():
     if request.method == 'POST':
         if request.headers['title']=='key_listener':
             key = request.get_json()
@@ -106,21 +114,22 @@ def main():
                 print(stats)
                 user_mail =current_user.email
                 return update_user_data(user_mail,stats)
-
             else:
                 print('unauthorized user')
-                flash("Until you're logged in, you are not able to view your statistics",category='error')
-                return 
-
-
+                # flash("Until you're logged in, you are not able to view your statistics",category='error')
+                # print(request.url)
+                # return webbrowser.open(request.url)
+                return redirect(request.url)
     if request.method == 'GET':
+        print('this is the referrer',request.referrer)
         words_list = words_taking('z', 1)
         words_list = ' '.join(words_list).replace(' ','_')
         return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+        # return redirect(url_for('views.main'),words_list= words_list, k_listen_f = randdom_func)
 
 
 admin_bp = Blueprint('admin',__name__)
 @admin_bp.route('/admin', methods = ['GET', 'POST'])
 def admin_panel():
     # return get_user_by_email('jo@gmail.com').email
-    return 'aaaaaa'
+    return current_user.email

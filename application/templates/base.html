@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.red.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/styles.css')}}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark" />
+    <title>Base template</title>
+    {% block head %}
+    {%endblock%}
+</head>
+<header>THIS IS THE HEADER</header>
+<body>
+<main class="container">
+    <nav>
+        <ul>
+          <li><a href="/">Home page</a></li>
+        </ul>
+        <ul>
+          <li><a href="/typing_test">Typing_Test</a></li>
+          {% if not current_user.is_authenticated%}
+          <li><a href="/signup">Signup</a></li>
+          <li><a href="/login">Login</a></li>
+          {%endif%}
+          {% if current_user.is_authenticated%}
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/logout">Logout</a></li>
+          {%endif%}
+
+        </ul>
+      </nav>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+      <dialog open>
+        <article>
+          <header>
+            <button aria-label="Close" rel="prev"></button>
+            <p>
+              {{message}}
+            </p>
+          </header>
+        </article>
+      </dialog>
+      {% endfor %}
+
+      {% endif %}
+      {% endwith %}
+      
+<!-- 
+      <div id="flashes">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div> -->
+
+
+    {% block main_content %}
+    Base information
+    {%endblock%}
+</main>
+</body>
+<footer>this is the footer</footer>
+</html>

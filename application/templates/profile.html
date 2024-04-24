@@ -1,0 +1,63 @@
+{%extends 'base.html'%}
+{%block head%}
+<title>Your profile</title>
+{%endblock%}
+
+{%block main_content%}
+<table >
+
+    <tbody>
+        <tr>
+        <td>Your name :</td>
+        <td>{{user.name}}</td>
+        </tr>
+        <tr>
+            <td>Your email :</td>
+            <td>{{user.email}}</td>
+        </tr>
+        <tr>
+            <td>Average accuracy :</td>
+            <td>{{avg_accuracy}}</td>
+        <tr>
+
+            <td>Average symbol per minute :</td>
+            <td>{{avg_symbol_p_minute}}</td>
+        </tr>
+
+    </tbody>
+
+
+</table>
+<table class="striped">
+    <!-- <thead>
+      <tr>
+        <td scope="col">Atempt number</th>
+        <td scope="col">Accuracy</th>
+        <th scope="col">Symbol per minute</th>
+      </tr>
+    </thead> -->
+    <tbody>
+        <tr>
+            <td scope="col">Atempt number</th>
+            <td scope="col">Accuracy</th>
+            <th scope="col">Symbol per minute</th>
+          </tr>
+    {% for i in range(user.accuracy.split()|count)%}
+      <tr>
+        <th scope="row">{{i+1}}</th>
+        <td>{{user.accuracy.split()[i]}}</td>
+        <td>{{user.symbol_p_minute.split()[i]}}</td>
+      </tr>
+    {%endfor%}
+    
+    </tbody>
+    <!-- <tfoot>
+      <tr>
+        <th scope="row">Average</th>
+        <td>9,126</td>
+        <td>0.91</td>
+        <td>341</td>
+      </tr>
+    </tfoot> -->
+  </table>
+{%endblock%}

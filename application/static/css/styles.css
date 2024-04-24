@@ -1,0 +1,28 @@
+:root {
+  --pico-primary-background: #d24317;
+  --pico-font-size: 1.5rem;
+  }
+
+/* #words_string {
+    font-size: 3em;
+    color: rgb(43, 135, 197);
+    height: 507px;
+
+} */
+kbd{
+  font-size: 100%;
+  /* padding: auto; */
+  margin: auto;
+
+}
+#words_string{
+  height: 333px;
+}
+#words_string{
+  width: max-content;
+  margin: auto;
+
+}
+table tr,table th,table td{
+  text-align: center;
+}
