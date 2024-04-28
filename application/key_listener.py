@@ -3,6 +3,8 @@ import timeit
 
 
 def randdom_func(expected_key):
+    if expected_key == '_':
+        expected_key = 'space'
     the_key = None
     print(expected_key)
     def on_press(key):

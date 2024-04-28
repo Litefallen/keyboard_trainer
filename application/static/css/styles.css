@@ -1,6 +1,9 @@
+
+
 :root {
   --pico-primary-background: #d24317;
   --pico-font-size: 1.5rem;
+  --word_amount_slider: 1;
   }
 
 /* #words_string {
@@ -16,13 +19,41 @@ kbd{
 
 }
 #words_string{
-  height: 333px;
+  /* height: 333px; */
 }
 #words_string{
-  width: max-content;
+  max-width: max-content;
   margin: auto;
 
 }
 table tr,table th,table td{
   text-align: center;
+}
+.number::before{
+  counter-reset: variable var(--word_amount_slider);
+	content: counter(variable);
+}
+.breadcrumb div{
+  margin: auto;
+}
+div>hr{
+  margin: 0.2rem;
+
+}
+.breadcrumb div ul li{
+  padding: 0.2rem;
+}
+footer{
+  position: relative;
+  bottom: 0vh;
+  width: 100%;
+  /* justify-content: center; */
+
+}
+footer nav{
+  position: relative;
+  /* display: flex; */
+
+  margin: auto;
+
 }

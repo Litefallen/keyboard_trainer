@@ -4,4 +4,14 @@
 {%endblock%}
 {% block main_content%}
 <section>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum magnam repudiandae in voluptate quidem voluptatum quibusdam commodi non blanditiis, necessitatibus veritatis quaerat, beatae eligendi voluptatibus inventore quas. Culpa provident nisi sit id animi quis quos voluptatibus eligendi ipsam non facere modi, fugiat laborum maiores libero quae eos accusantium aut recusandae minus? Recusandae magni incidunt unde.</section>
+    <!-- Amount of words -->
+<form action="/typing_test" method="GET">
+    <header>Amount of words:     <span class="number"></span></header>
+    <input name = 'word_amount_slider'type="range" value="1" min="1" max="100" step="1" id='word_amount_slider' onclick="document.body.style.setProperty('--word_amount_slider', this.value);" oninput="document.body.style.setProperty('--word_amount_slider', this.value);"/>
+    <small id="range-helper">
+        Drag the slider for desired word amount.
+      </small>
+    <input type="submit" value="Start typing" />
+</form>
+
 {%endblock%}

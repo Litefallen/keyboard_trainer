@@ -1,6 +1,6 @@
 import flask
 from flask import Blueprint, redirect, url_for,render_template,request
-from .words import json_words_dict, words_taking
+from .words import json_words_dict, words_taking, rand_test
 from .key_listener import randdom_func
 from flask_login import login_user, current_user, login_required, logout_user, user_unauthorized
 from .database import  add_user,update_user_data,get_user_by_email
@@ -11,6 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import sqlalchemy as sqla
 import webbrowser
 # from .database import session
+
 
 
 
@@ -96,6 +97,11 @@ def update_data():
 views = Blueprint('views', __name__)
 @views.route('/')
 def main():
+    # settings to choose
+    # amount of words
+    # what letter to train
+    #theme
+    
     return render_template('main_page.html')
 
 
@@ -120,16 +126,31 @@ def typing_test():
                 # print(request.url)
                 # return webbrowser.open(request.url)
                 return redirect(request.url)
+        
     if request.method == 'GET':
-        print('this is the referrer',request.referrer)
-        words_list = words_taking('z', 1)
-        words_list = ' '.join(words_list).replace(' ','_')
-        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
-        # return redirect(url_for('views.main'),words_list= words_list, k_listen_f = randdom_func)
+        if 'word_amount_slider' in dict(request.args).keys():
+            word_amount = int(dict(request.args)['word_amount_slider'])
+        # print('this is the referrer',request.referrer)
+            params = rand_test()
+            params['string_length'] = word_amount
+            words_list = words_taking(params)
+            words_list = ' '.join(words_list).replace(' ','_')
+            return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+            # return redirect(url_for('views.main'),words_list= words_list, k_listen_f = randdom_func)
+        else:
+            print('direct request')
+            words_list = words_taking(rand_test())
+            # print(words_list)
+            words_list = ' '.join(words_list).replace(' ','_')
+            # print(words_list)
+            # redirect(url_for('views.typing_test'),words_list= words_list, k_listen_f = randdom_func)
+            return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+
 
 
 admin_bp = Blueprint('admin',__name__)
 @admin_bp.route('/admin', methods = ['GET', 'POST'])
 def admin_panel():
     # return get_user_by_email('jo@gmail.com').email
-    return current_user.email
+    print(flask.session.items())
+    return request.cookies.get('id')
