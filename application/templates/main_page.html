@@ -7,10 +7,21 @@
     <!-- Amount of words -->
 <form action="/typing_test" method="GET">
     <header>Amount of words:     <span class="number"></span></header>
-    <input name = 'word_amount_slider'type="range" value="1" min="1" max="100" step="1" id='word_amount_slider' onclick="document.body.style.setProperty('--word_amount_slider', this.value);" oninput="document.body.style.setProperty('--word_amount_slider', this.value);"/>
+    <input name = 'word_amount_slider'type="range" value="1" min="1" max="50" step="1" id='word_amount_slider' onclick="document.body.style.setProperty('--word_amount_slider', this.value);" oninput="document.body.style.setProperty('--word_amount_slider', this.value);"/>
+
     <small id="range-helper">
         Drag the slider for desired word amount.
-      </small>
+    </small>
+    <fieldset>
+        <legend>Letter to practice:</legend>
+        {%for i in 'abcdefghijklmnopqrstuvwxyz'%}
+        <input type="radio" id="desired_letter" name="desired_letter" value={{i}}/>
+        <label htmlFor="desired_letter">{{i}}</label>
+        {%endfor%}
+      </fieldset>
+    <small id="letter-helper">
+        In a test there will be words, where the letter you picked occurs most often.
+    </small>
     <input type="submit" value="Start typing" />
 </form>
 

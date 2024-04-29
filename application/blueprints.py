@@ -128,23 +128,27 @@ def typing_test():
                 return redirect(request.url)
         
     if request.method == 'GET':
+        params = rand_test()
+        print(dict(request.args))
         if 'word_amount_slider' in dict(request.args).keys():
             word_amount = int(dict(request.args)['word_amount_slider'])
-        # print('this is the referrer',request.referrer)
-            params = rand_test()
             params['string_length'] = word_amount
-            words_list = words_taking(params)
-            words_list = ' '.join(words_list).replace(' ','_')
-            return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+        if 'desired_letter' in dict(request.args).keys():
+            letter = dict(request.args)['desired_letter'].strip('/')
+            params['letter'] = letter
+        # print('this is the referrer',request.referrer)
+        words_list = words_taking(params)
+        words_list = ' '.join(words_list).replace(' ','_')
+        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
             # return redirect(url_for('views.main'),words_list= words_list, k_listen_f = randdom_func)
-        else:
-            print('direct request')
-            words_list = words_taking(rand_test())
-            # print(words_list)
-            words_list = ' '.join(words_list).replace(' ','_')
-            # print(words_list)
-            # redirect(url_for('views.typing_test'),words_list= words_list, k_listen_f = randdom_func)
-            return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+    else:
+        print('direct request')
+        words_list = words_taking(rand_test())
+        # print(words_list)
+        words_list = ' '.join(words_list).replace(' ','_')
+        # print(words_list)
+        # redirect(url_for('views.typing_test'),words_list= words_list, k_listen_f = randdom_func)
+        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
 
 
 

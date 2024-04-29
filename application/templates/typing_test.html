@@ -1,13 +1,13 @@
 {% extends "base.html" %}
     {% block head %}
-    <style>
+    <!-- <style>
         #dynamic-div {
             width: 200px;
             height: 200px;
             background-color: lightblue;
             transition: background-color 0.5s ease;
         }
-    </style>
+    </style> -->
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/styles.css')}}">
     <title>Typing_test</title>
     {%endblock%}
@@ -23,6 +23,15 @@
     {%endfor%}
 </section>
 </div>
+    <dialog open id="press_enter">
+        <article>
+          <header>
+            <!-- <button aria-label="Close" rel="prev"></button> -->
+
+          </header>
+        </article>
+      </dialog>
+
 <article id="typing_func">
     <script>
 
@@ -40,7 +49,7 @@
         return data['result']
         }
         var press_enter = false;
-        var res_section = document.getElementById('typing_func');
+        var res_section = document.getElementById('press_enter');
         res_section.innerHTML = 'Press Enter to start typing test';
 
         async function to_Start(){
@@ -63,9 +72,9 @@
         }
         var let_id = `${i}`;
         var cur_letter = document.getElementById(let_id);
-        if(result == 'stopit'){
-            break;
-        }
+        // if(result == 'stopit'){
+        //     break;
+        // }
         if(!result){
             cur_letter.style.color = 'red';
             false_keys++;
@@ -93,7 +102,7 @@
     stat_stat_res = await stat_res.json()
     // res_section.innerHTML = JSON.stringify(stat_stat_res);
     // res_section.innerHTML = JSON.stringify(stat_data);
-    res_section.innerHTML = JSON.stringify(stat_data.symbol_p_minute);
+    // res_section.innerHTML = JSON.stringify(stat_data.symbol_p_minute);
     }
     // else{iterAtor()}
     // }

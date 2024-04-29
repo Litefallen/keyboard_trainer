@@ -18,7 +18,7 @@
           <li><a href="/">Home page</a></li>
         </ul>
         <ul>
-          <li><a href="/typing_test">Typing_Test</a></li>
+          <li><a href="/typing_test">Random test</a></li>
           {% if not current_user.is_authenticated%}
           <li><a href="/signup">Signup</a></li>
           <li><a href="/login">Login</a></li>
@@ -34,16 +34,10 @@
       {% with messages = get_flashed_messages() %}
         {% if messages %}
         {% for message in messages %}
-      <dialog open>
-        <article>
-          <header>
-            <button aria-label="Close" rel="prev"></button>
             <p>
               {{message}}
             </p>
-          </header>
-        </article>
-      </dialog>
+
       {% endfor %}
 
       {% endif %}
