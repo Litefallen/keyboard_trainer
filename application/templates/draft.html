@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Draft</title>
+</head>
+
+<body>
+    <div style="max-width: 50px;word-break: normal" id="text_div">Absurd normal absence abusal abrasive autumn adheritance automotive</div>
+    <h3>Found by js query selector</h3>
+    <div id="result_found"></div>
+</body>
+<script>
+    var l = ['2232','34','344','4','512121221']
+    var n_l = l.map(word => {return word.length});                                      
+    // var text_string = document.getElementById('text_div')
+    var result_found = document.getElementById('result_found')
+    result_found.innerHTML = `${n_l}`
+
+
+</script>
+</html>

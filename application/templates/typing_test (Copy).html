@@ -14,21 +14,11 @@
 
     {%block main_content%}
 
-
 <div id="words_string_wrapper">
 <article id="words_string">
     {%for i in range(words_list|list|count)%}
     <!-- <span id={{i}}>{{words_list[i]}}</span> -->
-    <kbd id={{i}}>
-    {%for l in range(words_list[i]|count)%}
-
-        <span id="{{l}}">
-            {{words_list[i][l]}}
-        </span>
-    
-        {%endfor%}
-    
-    </kbd>
+    <kbd id={{i}}>{{words_list[i]}}</kbd>
 
     {%endfor%}
 </article>
@@ -43,7 +33,6 @@
       </dialog>
 
 <section id="typing_func">
-
     <script>
 
         async function loadListSequentially(letter) {
@@ -70,23 +59,22 @@
             }
             else{res_section.style.display = 'none';}
         }
-    var words_list = '{{words_list|list|join(" ")}}'
-    var words_list = words_list.split(' ');
-    var res_sections = document.getElementById('typing_func');
-    res_sections.innerHTML = words_list
-
+    let words_list = '{{words_list}}';
     async function iterAtor(){
     await to_Start()
     let false_keys = 0
     var stat_data = {'accuracy':null, 'symbol_p_minute' : null}
     var start = false;
     for (i = 0; i<words_list.length; i++){
-        for (l = 0; l<words_list[i].length; l++){
-        var result = await loadListSequentially(words_list[i][l])
+        var result = await loadListSequentially(words_list[i])
         if (!start){
             start = new Date().getTime();
         }
-        cur_letter = document.querySelector(`kbd[id ="${i}"] span[id = "${l}"]`);
+        var let_id = `${i}`;
+        var cur_letter = document.getElementById(let_id);
+        // if(result == 'stopit'){
+        //     break;
+        // }
         if(!result){
             cur_letter.style.color = 'red';
             false_keys++;
@@ -94,22 +82,15 @@
         if(result){
             cur_letter.style.color = 'green';
         }
-
         var res_section = document.getElementById('typing_func');
-        // res_section.innerHTML = total_length
-
-
-
+        res_section.innerHTML = result;
     }
-    }
-    var end = new Date().getTime();
-    var total_length = words_list.map(word=>{return word.length});
-    total_length = total_length.reduce((a, b) => a + b, 0);
-    accuracy = Number(100 -(100/`${total_length}` * false_keys).toFixed(2));
-    res_section.innerHTML = accuracy;
+    var end = new Date().getTime();;
+    // var res_section = document.getElementById('typing_func');
+    accuracy = Number(100 -(100/words_list.length * false_keys).toFixed(2));
     stat_data.accuracy = accuracy;
     speed = Number(((end - start)/1000).toFixed(2));
-    stat_data.symbol_p_minute = `${total_length}`*(60/speed).toFixed(0);
+    stat_data.symbol_p_minute = words_list.length*(60/speed).toFixed(0);
     var stat_res = await fetch('http://127.0.0.1:5000//typing_test', {
                 method: 'POST',
                 headers: {
@@ -119,6 +100,7 @@
                 body: JSON.stringify(stat_data)
             })
     stat_stat_res = await stat_res.json()
+    // res_section.innerHTML = JSON.stringify(stat_stat_res);
     // res_section.innerHTML = JSON.stringify(stat_data);
     // res_section.innerHTML = JSON.stringify(stat_data.symbol_p_minute);
     }

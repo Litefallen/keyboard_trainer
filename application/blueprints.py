@@ -138,17 +138,22 @@ def typing_test():
             params['letter'] = letter
         # print('this is the referrer',request.referrer)
         words_list = words_taking(params)
-        words_list = ' '.join(words_list).replace(' ','_')
+        # words_list = ' '.join(words_list).replace(' ','_')
+        words_list = " _ ".join(words_list).split(' ')
+        print(words_list, type(words_list))
+        # print(words_list)
+
         return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
             # return redirect(url_for('views.main'),words_list= words_list, k_listen_f = randdom_func)
-    else:
-        print('direct request')
-        words_list = words_taking(rand_test())
-        # print(words_list)
-        words_list = ' '.join(words_list).replace(' ','_')
-        # print(words_list)
-        # redirect(url_for('views.typing_test'),words_list= words_list, k_listen_f = randdom_func)
-        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+    # else:
+    #     print('direct request')
+    #     words_list = words_taking(rand_test())
+    #     words_list = " _ ".join(words_list).split(' ')
+    #     # print(words_list)
+    #     # words_list = ' '.join(words_list).replace(' ','_')
+    #     # print('this is', words_list)
+    #     # redirect(url_for('views.typing_test'),words_list= words_list, k_listen_f = randdom_func)
+    #     return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
 
 
 

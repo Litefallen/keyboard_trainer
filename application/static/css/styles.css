@@ -57,3 +57,30 @@ footer nav{
   margin: auto;
 
 }
+header hr{
+  margin-top: 0;
+}
+.flashes {
+  border: var(--pico-outline-width) solid var(--pico-primary-background);
+  border-radius: var(--pico-border-radius);
+  display: none;
+  /* justify-content: center; */
+  align-items: center;
+
+}
+
+.flashes .message{
+  /* align-items: center;
+  align-content: center; */
+  width: 100%;
+  display: flex;
+  /* height: auto; */
+  float: left;
+  margin-left:var(--pico-form-element-spacing-horizontal)
+}
+.flashes button{
+  border-radius: 0;
+}
+#words_string{
+  text-align: center;
+}

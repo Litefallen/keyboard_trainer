@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.orange.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.pumpkin.min.css"/>
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/styles.css')}}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,39 +10,30 @@
     {% block head %}
     {%endblock%}
 </head>
-<header>THIS IS THE HEADER</header>
+
 <body>
 <main class="container">
-    <nav>
-        <ul>
-          <li><a href="/">Home page</a></li>
-        </ul>
-        <ul>
-          <li><a href="/typing_test">Random test</a></li>
-          {% if not current_user.is_authenticated%}
-          <li><a href="/signup">Signup</a></li>
-          <li><a href="/login">Login</a></li>
-          {%endif%}
-          {% if current_user.is_authenticated%}
-          <li><a href="/profile">Profile</a></li>
-          <li><a href="/logout">Logout</a></li>
-          {%endif%}
+  {%include 'header.html'%}
 
-        </ul>
-      </nav>
-
+  <script>
+    function myFunction() {
+        document.getElementById("flashes").style.display = "none";
+    }
+    </script>
+<section class="flashes" id="flashes">
       {% with messages = get_flashed_messages() %}
         {% if messages %}
+        <script>document.getElementById("flashes").style.display = "flex";</script>
         {% for message in messages %}
-            <p>
-              {{message}}
-            </p>
-
+            <div class="message">{{message}}</div>
+            <button aria-label="Close" rel="prev" class="close_flash" onclick="myFunction()">X</button>
       {% endfor %}
 
       {% endif %}
       {% endwith %}
-      
+    </section>     
+
+
 <!-- 
       <div id="flashes">
         {% with messages = get_flashed_messages() %}

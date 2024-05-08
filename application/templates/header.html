@@ -1,0 +1,21 @@
+<header>
+<nav>
+    <ul>
+      <li><a href="/">Home page</a></li>
+    </ul>
+    <ul>
+      <li><a href="/typing_test">Random test</a></li>
+      {% if not current_user.is_authenticated%}
+      <li><a href="/signup">Signup</a></li>
+      <li><a href="/login">Login</a></li>
+      {%endif%}
+      {% if current_user.is_authenticated%}
+      <li><a href="/profile">Profile</a></li>
+      <li><a href="/logout">Logout</a></li>
+      {%endif%}
+
+    </ul>
+    
+  </nav>
+  <hr>
+</header>
