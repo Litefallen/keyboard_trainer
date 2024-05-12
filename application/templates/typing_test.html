@@ -1,25 +1,16 @@
 {% extends "base.html" %}
     {% block head %}
-    <!-- <style>
-        #dynamic-div {
-            width: 200px;
-            height: 200px;
-            background-color: lightblue;
-            transition: background-color 0.5s ease;
-        }
-    </style> -->
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/styles.css')}}">
     <title>Typing_test</title>
     {%endblock%}
 
     {%block main_content%}
 
-
 <div id="words_string_wrapper">
 <article id="words_string">
     {%for i in range(words_list|list|count)%}
     <!-- <span id={{i}}>{{words_list[i]}}</span> -->
-    <kbd id={{i}}>
+    <span id={{i}}>
     {%for l in range(words_list[i]|count)%}
 
         <span id="{{l}}">
@@ -28,7 +19,7 @@
     
         {%endfor%}
     
-    </kbd>
+    </span>
 
     {%endfor%}
 </article>
@@ -42,8 +33,22 @@
         </article>
       </dialog>
 
-<section id="typing_func">
-
+<section id="typing_result">
+    <div>
+    <table id="result_table"><tbody>
+        <tr>
+            <td>Speed (seconds)</td>
+            <td>Symbol per minute</td>
+            <td>Accuracy (percent)</td>
+        </tr>
+        <tr>
+            <td><div id="res_speed"></div></td>
+            <td><div id="symbol_per_minute"></div></td>
+            <td><div id="accuracy"></div></td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
     <script>
 
         async function loadListSequentially(letter) {
@@ -72,8 +77,7 @@
         }
     var words_list = '{{words_list|list|join(" ")}}'
     var words_list = words_list.split(' ');
-    var res_sections = document.getElementById('typing_func');
-    res_sections.innerHTML = words_list
+
 
     async function iterAtor(){
     await to_Start()
@@ -83,33 +87,38 @@
     for (i = 0; i<words_list.length; i++){
         for (l = 0; l<words_list[i].length; l++){
         var result = await loadListSequentially(words_list[i][l])
+        cur_letter = document.querySelector(`span[id ="${i}"] span[id = "${l}"]`);
         if (!start){
             start = new Date().getTime();
         }
-        cur_letter = document.querySelector(`kbd[id ="${i}"] span[id = "${l}"]`);
         if(!result){
             cur_letter.style.color = 'red';
             false_keys++;
         }
         if(result){
+            cur_letter.style['text-decoration-line'] = 'none';
+
             cur_letter.style.color = 'green';
         }
-
-        var res_section = document.getElementById('typing_func');
-        // res_section.innerHTML = total_length
-
-
-
     }
     }
     var end = new Date().getTime();
     var total_length = words_list.map(word=>{return word.length});
     total_length = total_length.reduce((a, b) => a + b, 0);
     accuracy = Number(100 -(100/`${total_length}` * false_keys).toFixed(2));
-    res_section.innerHTML = accuracy;
     stat_data.accuracy = accuracy;
     speed = Number(((end - start)/1000).toFixed(2));
     stat_data.symbol_p_minute = `${total_length}`*(60/speed).toFixed(0);
+    var res_speed = document.getElementById('res_speed');
+    var symbol_per_minute = document.getElementById('symbol_per_minute');
+    var res_accuracy = document.getElementById('accuracy');
+    res_speed.innerHTML = speed;
+    symbol_per_minute.innerHTML = stat_data.symbol_p_minute;
+    res_accuracy.innerHTML = accuracy;
+    function show_res_table() {
+        document.getElementById("typing_result").style.display = "block";
+    }
+    show_res_table()
     var stat_res = await fetch('http://127.0.0.1:5000//typing_test', {
                 method: 'POST',
                 headers: {
@@ -119,12 +128,8 @@
                 body: JSON.stringify(stat_data)
             })
     stat_stat_res = await stat_res.json()
-    // res_section.innerHTML = JSON.stringify(stat_data);
-    // res_section.innerHTML = JSON.stringify(stat_data.symbol_p_minute);
     }
-    // else{iterAtor()}
-    // }
-     iterAtor();
+    iterAtor();
     </script>
 
 </section>

@@ -18,9 +18,7 @@ kbd{
   margin: auto;
 
 }
-#words_string{
-  /* height: 333px; */
-}
+
 #words_string{
   max-width: max-content;
   margin: auto;
@@ -83,4 +81,11 @@ header hr{
 }
 #words_string{
   text-align: center;
+}
+
+#typing_result{
+  display: none;
+}
+header nav a{
+  text-decoration: none;
 }

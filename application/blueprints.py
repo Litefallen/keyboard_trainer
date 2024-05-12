@@ -1,6 +1,6 @@
 import flask
 from flask import Blueprint, redirect, url_for,render_template,request
-from .words import json_words_dict, words_taking, rand_test
+from .words import words_taking, rand_test
 from .key_listener import randdom_func
 from flask_login import login_user, current_user, login_required, logout_user, user_unauthorized
 from .database import  add_user,update_user_data,get_user_by_email
@@ -140,7 +140,7 @@ def typing_test():
         words_list = words_taking(params)
         # words_list = ' '.join(words_list).replace(' ','_')
         words_list = " _ ".join(words_list).split(' ')
-        print(words_list, type(words_list))
+        # print(words_list, type(words_list))
         # print(words_list)
 
         return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
