@@ -10,7 +10,7 @@
 <article id="words_string">
     {%for i in range(words_list|list|count)%}
     <!-- <span id={{i}}>{{words_list[i]}}</span> -->
-    <span id={{i}}>
+    <div class='word'id={{i}}>
     {%for l in range(words_list[i]|count)%}
 
         <span id="{{l}}">
@@ -19,7 +19,7 @@
     
         {%endfor%}
     
-    </span>
+    </div>
 
     {%endfor%}
 </article>
@@ -49,6 +49,15 @@
     </tbody>
     </table>
     </div>
+</section>
+<form action="/typing_test" method="get" id="new_test_button">
+    <input name="string_length" type="hidden" id="string_length" value={{test_settings.string_length}} />
+    <input name="letter" type="hidden" id="letter" value='{{test_settings["letter"]}}' />
+
+<input type="submit" value="New test" />
+<small>*with same parameters</small>
+</form>
+
     <script>
 
         async function loadListSequentially(letter) {
@@ -86,18 +95,20 @@
     var start = false;
     for (i = 0; i<words_list.length; i++){
         for (l = 0; l<words_list[i].length; l++){
+        cur_letter = document.querySelector(`div[id ="${i}"] span[id = "${l}"]`);
+        cur_letter.style['text-decoration-line'] = 'underline';
         var result = await loadListSequentially(words_list[i][l])
-        cur_letter = document.querySelector(`span[id ="${i}"] span[id = "${l}"]`);
+
         if (!start){
             start = new Date().getTime();
         }
         if(!result){
+            cur_letter.style['text-decoration-line'] = 'none';
             cur_letter.style.color = 'red';
             false_keys++;
         }
         if(result){
             cur_letter.style['text-decoration-line'] = 'none';
-
             cur_letter.style.color = 'green';
         }
     }
@@ -114,9 +125,11 @@
     var res_accuracy = document.getElementById('accuracy');
     res_speed.innerHTML = speed;
     symbol_per_minute.innerHTML = stat_data.symbol_p_minute;
-    res_accuracy.innerHTML = accuracy;
+    res_accuracy.innerHTML = accuracy.toFixed(2);
     function show_res_table() {
         document.getElementById("typing_result").style.display = "block";
+        document.getElementById("new_test_button").style.display = "block";
+
     }
     show_res_table()
     var stat_res = await fetch('http://127.0.0.1:5000//typing_test', {
@@ -132,5 +145,4 @@
     iterAtor();
     </script>
 
-</section>
 {%endblock%}

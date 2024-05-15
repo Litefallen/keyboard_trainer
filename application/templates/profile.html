@@ -42,6 +42,7 @@
             <td scope="col">Accuracy</th>
             <th scope="col">Symbol per minute</th>
           </tr>
+    {% if user.accuracy%}
     {% for i in range(user.accuracy.split()|count)%}
       <tr>
         <th scope="row">{{i+1}}</th>
@@ -49,7 +50,7 @@
         <td>{{user.symbol_p_minute.split()[i]}}</td>
       </tr>
     {%endfor%}
-    
+    {%endif%}
     </tbody>
     <!-- <tfoot>
       <tr>

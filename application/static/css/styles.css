@@ -3,32 +3,29 @@
 :root {
   --pico-primary-background: #d24317;
   --pico-font-size: 1.5rem;
-  --word_amount_slider: 1;
+  --string_length: 1;
   }
 
-/* #words_string {
-    font-size: 3em;
-    color: rgb(43, 135, 197);
-    height: 507px;
-
-} */
-kbd{
-  font-size: 100%;
-  /* padding: auto; */
-  margin: auto;
-
-}
+  .container{
+    min-height: 85vh;
+  
+  }
 
 #words_string{
-  max-width: max-content;
+  /* max-width: 80vw; */
   margin: auto;
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.word{
+  display: flex;
 }
 table tr,table th,table td{
   text-align: center;
 }
 .number::before{
-  counter-reset: variable var(--word_amount_slider);
+  counter-reset: variable var(--string_length);
 	content: counter(variable);
 }
 .breadcrumb div{
@@ -42,7 +39,7 @@ div>hr{
   padding: 0.2rem;
 }
 footer{
-  position: relative;
+  /* position: relative; */
   bottom: 0vh;
   width: 100%;
   /* justify-content: center; */
@@ -62,17 +59,13 @@ header hr{
   border: var(--pico-outline-width) solid var(--pico-primary-background);
   border-radius: var(--pico-border-radius);
   display: none;
-  /* justify-content: center; */
   align-items: center;
 
 }
 
 .flashes .message{
-  /* align-items: center;
-  align-content: center; */
   width: 100%;
   display: flex;
-  /* height: auto; */
   float: left;
   margin-left:var(--pico-form-element-spacing-horizontal)
 }
@@ -88,4 +81,7 @@ header hr{
 }
 header nav a{
   text-decoration: none;
+}
+#new_test_button{
+  display: none;
 }

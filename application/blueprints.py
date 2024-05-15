@@ -82,10 +82,16 @@ user_profile_bp = Blueprint('profile', __name__)
 @login_required
 def profile():
     user = get_user_by_email(current_user.email)
-    avg_accuracy = [float(i) for i in user.accuracy.split()]
-    avg_accuracy = round(sum(avg_accuracy)/len(avg_accuracy),1)
-    avg_symbol_p_minute = [float(i) for i in user.symbol_p_minute.split()]
-    avg_symbol_p_minute = round(sum(avg_symbol_p_minute)/len(avg_symbol_p_minute),1)
+    if user.accuracy:
+        avg_accuracy = [float(i) for i in user.accuracy.split()]
+        avg_accuracy = round(sum(avg_accuracy)/len(avg_accuracy),1)
+    else:
+        avg_accuracy = 0
+    if user.symbol_p_minute :
+        avg_symbol_p_minute = [float(i) for i in user.symbol_p_minute.split()]
+        avg_symbol_p_minute = round(sum(avg_symbol_p_minute)/len(avg_symbol_p_minute),1)
+    else:
+        avg_symbol_p_minute = 0
     return render_template('profile.html', user = user, avg_accuracy = avg_accuracy,avg_symbol_p_minute= avg_symbol_p_minute)
 
 
@@ -117,7 +123,7 @@ def typing_test():
         if request.headers['title']=='stats':
             if current_user.is_authenticated:
                 stats = request.get_json()
-                print(stats)
+                print('this is stats', stats)
                 user_mail =current_user.email
                 return update_user_data(user_mail,stats)
             else:
@@ -125,17 +131,23 @@ def typing_test():
                 # flash("Until you're logged in, you are not able to view your statistics",category='error')
                 # print(request.url)
                 # return webbrowser.open(request.url)
-                return redirect(request.url)
+                # return redirect(request.url)
         
     if request.method == 'GET':
-        params = rand_test()
-        print(dict(request.args))
-        if 'word_amount_slider' in dict(request.args).keys():
-            word_amount = int(dict(request.args)['word_amount_slider'])
-            params['string_length'] = word_amount
-        if 'desired_letter' in dict(request.args).keys():
-            letter = dict(request.args)['desired_letter'].strip('/')
-            params['letter'] = letter
+        if not request.args:
+            params = rand_test()
+        else:
+            print(request.args)
+            params = dict()
+            params['string_length'] = int(dict(request.args)['string_length'])
+            params['letter'] = dict(request.args)['letter'].strip('/')
+        # print(params)
+        # if 'word_amount_slider' in dict(request.args).keys():
+        #     word_amount = int(dict(request.args)['word_amount_slider'])
+        #     params['string_length'] = word_amount
+        # if 'desired_letter' in dict(request.args).keys():
+        #     letter = dict(request.args)['desired_letter'].strip('/')
+        #     params['letter'] = letter
         # print('this is the referrer',request.referrer)
         words_list = words_taking(params)
         # words_list = ' '.join(words_list).replace(' ','_')
@@ -143,7 +155,7 @@ def typing_test():
         # print(words_list, type(words_list))
         # print(words_list)
 
-        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func)
+        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func, test_settings = params)
             # return redirect(url_for('views.main'),words_list= words_list, k_listen_f = randdom_func)
     # else:
     #     print('direct request')

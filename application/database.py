@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from .models import Base, User
 from sqlalchemy.engine import URL
 
-engine = sqla.create_engine('sqlite:///instance/application.sqlite', echo=True)
+engine = sqla.create_engine('sqlite:///instance/application.sqlite', echo=False)
 
 
 def session_decorator(func):
@@ -41,9 +41,12 @@ def get_user_by_email(email:str,session):
 @session_decorator
 def update_user_data(user_mail,stats,session):
     user = session.scalars(sqla.select(User).where(User.email == user_mail)).first()
+    print('This is accuracy',user.accuracy)
+    print('This is symbol_p_minute',user.symbol_p_minute)
+
     if not user.accuracy:
         print('First test!')
-        user.symbol_p_sec = str(stats['symbol_p_sec'])
+        user.symbol_p_minute = str(stats['symbol_p_minute'])
         user.accuracy = str(stats['accuracy'])
         session.commit()
     else:
