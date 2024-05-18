@@ -1,19 +1,20 @@
 <footer> 
+  
 <nav aria-label="breadcrumb" class="breadcrumb">
 
     <div>
-<hr>
-    <ul>
 
+
+    <ul>
       <li><a href="/"><small>Home page</small></a></li>
-      <li><a href="/typing_test"><small>Typing_Test</small></a></li>
+      <li><a href="/typing_test"><small>Random practice</small></a></li>
       {% if not current_user.is_authenticated%}
       <li><a href="/signup"><small>Signup</small></a></li>
       <li><a href="/login"><small>Login</small></a></li>
       {%endif%}
       {% if current_user.is_authenticated%}
       <li><a href="/profile"><small>Profile</small></a></li>
-      <li><a href="/logout"><small>Logout</small></a></li>
+      <li><a style="color: brown;" href="/logout"><small>Logout</small></a></li>
       {%endif%}
     </ul>
 </div>

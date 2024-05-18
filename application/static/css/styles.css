@@ -4,6 +4,8 @@
   --pico-primary-background: #d24317;
   --pico-font-size: 1.5rem;
   --string_length: 1;
+  --pico-nav-breadcrumb-divider: none;
+  --pico-border-radius: 0.25rem;
   }
 
   .container{
@@ -30,25 +32,24 @@ table tr,table th,table td{
 }
 .breadcrumb div{
   margin: auto;
+  list-style-type:none
 }
 div>hr{
   margin: 0.2rem;
 
 }
+
 .breadcrumb div ul li{
   padding: 0.2rem;
 }
 footer{
-  /* position: relative; */
   bottom: 0vh;
   width: 100%;
-  /* justify-content: center; */
+
 
 }
 footer nav{
   position: relative;
-  /* display: flex; */
-
   margin: auto;
 
 }
@@ -84,4 +85,29 @@ header nav a{
 }
 #new_test_button{
   display: none;
+}
+#letters_list{
+  display: flex;
+  flex-wrap: wrap;
+
+}
+.practice_letter{
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-content: center;
+  margin: auto;
+}
+.practice_letter div{
+  width: 100%;
+}
+.letter_radio{
+  margin: auto;
+}
+.intro{
+  text-align: center;
+}
+#user_form input{
+  border-radius: var(--pico-border-radius);
 }

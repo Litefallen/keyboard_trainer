@@ -3,7 +3,7 @@
 <title>Main Page</title>
 {%endblock%}
 {% block main_content%}
-<section>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum magnam repudiandae in voluptate quidem voluptatum quibusdam commodi non blanditiis, necessitatibus veritatis quaerat, beatae eligendi voluptatibus inventore quas. Culpa provident nisi sit id animi quis quos voluptatibus eligendi ipsam non facere modi, fugiat laborum maiores libero quae eos accusantium aut recusandae minus? Recusandae magni incidunt unde.</section>
+<article class="intro">Words for typing practice will be taken from over 466k English words, excluding proper names, acronyms, or compound words and phrases. You could choose specific letter for practice. In that case will be taken words, where the picked letter is most frequent one. Random test picks random words in amount of range between 1 and 50. Registration gives opportunity to track such parameters as accuracy, speed and symbol per minute and their progress.</article>
     <!-- Amount of words -->
 <form action="/typing_test" method="GET">
     <header>Amount of words:     <span class="number"></span></header>
@@ -12,11 +12,13 @@
     <small id="range-helper">
         Drag the slider for desired word amount.
     </small>
-    <fieldset>
+    <fieldset id="letters_list">
         <legend>Letter to practice:</legend>
         {%for i in 'abcdefghijklmnopqrstuvwxyz'%}
-        <input type="radio" id="letter" name="letter" value={{i}}/>
-        <label htmlFor="letter">{{i}}</label>
+    <div class="practice_letter">
+       <input class="letter_radio"type="radio" id={{i}} name="letter" value={{i}}/>
+        <label for={{i}}>{{i}}</label>
+    </div>
         {%endfor%}
       </fieldset>
     <small id="letter-helper">
