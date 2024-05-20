@@ -22,7 +22,9 @@ def word_freq_sort(): # sort words by most frequent letter
     with open('application/words_dictionary.json', 'r') as file:
         d_file = json.load(file).keys()
         for word in d_file:
-            most_freq_letter = Counter(word).most_common(1)[0][0]
-            alph_dict[most_freq_letter].append(word)
+            m_freq_cntr = Counter(word).most_common(len(word)) # letter frequency in a word
+            m_freq_lst = [i[0] for i in m_freq_cntr if i[1]==m_freq_cntr[0][1]] # list with the most freq letters
+            for letter in m_freq_lst: # add dict value to most freq letter key
+                alph_dict[letter].append(word)
         with open('application/sorted_words.json','w') as file: # create json file with sorted letters
             json_file = json.dump(alph_dict,fp=file)
