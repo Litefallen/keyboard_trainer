@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from .blueprints import auth_bp,user_profile_bp,views, admin_bp
+from .blueprints import auth_bp,user_profile_bp,views
 from flask_login import LoginManager
 from .models import User
 from .database import get_user
@@ -11,7 +11,6 @@ def create_app(test_config=None):
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_profile_bp)
     app.register_blueprint(views)
-    app.register_blueprint(admin_bp)
     from .database import  init_db
     # init_app(app)
     app.config.from_mapping(

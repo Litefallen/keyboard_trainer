@@ -1,5 +1,4 @@
 from pynput import keyboard
-import timeit
 
 
 def randdom_func(expected_key):
@@ -21,14 +20,6 @@ def randdom_func(expected_key):
             print(key.name)
             return False
 
-            # print(f'special key {key} pressed')
-            # exit()
-
-    # def on_release(key):
-    #     if key == keyboard.Key.esc:
-    #         # Stop listener
-    #         return 'stopit'
-
     with keyboard.Listener(
         on_press=on_press,
         # on_release=on_release,
@@ -37,5 +28,3 @@ def randdom_func(expected_key):
     print(f"The pressed key is: {the_key}, the expected key is: {expected_key}")
     print(the_key== expected_key)
     return {'result' :True} if the_key== expected_key else {'result' :False}
-# for i in 'zealoft':
-#     randdom_func(i)

@@ -1,16 +1,14 @@
 from collections import Counter
-import asyncio
 import os
 import json
 from random import choice,randint
-# from .words_sort import w_sort
 print(os.getcwd())
-def rand_test():
+def rand_test(): # get random letter and word quantity for typing practice
     alph = 'abcdefghijklmnopqrstuvwxyz'
     letter = choice(alph)
     length = choice(range(1,50))
     return {'letter':letter, 'string_length':length}
-def words_taking(val_dict:dict[str,int]):
+def words_taking(val_dict:dict[str,int]): # get words from dictionary file using letter and string_length parameters. String length - amount of words taken from dictionary.
     with open('application/sorted_words.json', 'r') as json_f:
         json_words_dict = json.load(json_f)
         return [json_words_dict[val_dict['letter']][randint(0, len(json_words_dict[val_dict['letter']]))] for _ in range(val_dict['string_length'])]
