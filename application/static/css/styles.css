@@ -111,3 +111,6 @@ header nav a{
 #user_form input{
   border-radius: var(--pico-border-radius);
 }
+small{
+  color: var(--pico-muted-color);
+}

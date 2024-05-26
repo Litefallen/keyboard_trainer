@@ -23,6 +23,7 @@
 
     {%endfor%}
 </article>
+<small>An app is listening all your keyboard related actions now. To stop listening finish typing practice or press Esc to cancel it and get redirected to the main page. </small>
 </div>
     <dialog open id="press_enter">
         <article>
@@ -32,7 +33,6 @@
           </header>
         </article>
       </dialog>
-
 <section id="typing_result">
     <div>
     <table id="result_table"><tbody>
@@ -102,12 +102,15 @@
         if (!start){
             start = new Date().getTime();
         }
-        if(!result){
+        if(result=='Abort'){
+            location.replace("/")
+        }
+        if(result==false){
             cur_letter.style['text-decoration-line'] = 'none';
             cur_letter.style.color = 'red';
             false_keys++;
         }
-        if(result){
+        if(result==true){
             cur_letter.style['text-decoration-line'] = 'none';
             cur_letter.style.color = 'green';
         }
