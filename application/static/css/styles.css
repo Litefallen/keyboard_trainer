@@ -3,7 +3,7 @@
 :root {
   --pico-primary-background: #d24317;
   --pico-font-size: 1.5rem;
-  --string_length: 1;
+  --string_length: 10;
   --pico-nav-breadcrumb-divider: none;
   --pico-border-radius: 0.25rem;
   }

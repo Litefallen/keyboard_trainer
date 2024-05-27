@@ -122,13 +122,11 @@ def typing_test():
                 print('unauthorized user')
         
     if request.method == 'GET':
-        if not request.args: # if its random practice - generate random parametres
-            params = rand_test()
-        else: # use params, selected by user
-            # print(request.args)
-            params = dict()
-            params['string_length'] = int(dict(request.args)['string_length'])
+        params = rand_test() # create defult settings for typing practice
+        if 'letter' in request.args: # replace default settings if specific settings are provided
             params['letter'] = dict(request.args)['letter'].strip('/')
+        if 'string_length' in request.args:
+            params['string_length'] = int(dict(request.args)['string_length'])
         words_list = words_taking(params) 
         words_list = " _ ".join(words_list).split(' ')
         # generate the string with selected words, divided by '_' to represent space key.
