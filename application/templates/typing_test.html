@@ -79,7 +79,7 @@
 
         async function to_Start(){
             press_enter = await loadListSequentially('enter');
-            if (press_enter==false){
+            if (press_enter!=true){
                 await to_Start();
             }
             else{res_section.style.display = 'none';}
@@ -106,6 +106,7 @@
             location.replace("/")
         }
         if(result==false){
+
             cur_letter.style['text-decoration-line'] = 'none';
             cur_letter.style.color = 'red';
             false_keys++;

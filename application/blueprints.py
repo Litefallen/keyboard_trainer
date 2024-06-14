@@ -1,7 +1,7 @@
 
 from flask import Blueprint, redirect, url_for,render_template,request
 from .words import words_taking, rand_test
-from .key_listener import randdom_func
+from .key_listener import k_listener
 from flask_login import login_user, current_user, login_required, logout_user, user_unauthorized
 from .database import  add_user,update_user_data,get_user_by_email
 from .models import User
@@ -100,6 +100,8 @@ def update_data():
 views = Blueprint('views', __name__) # main page
 @views.route('/')
 def main():
+    print(request.server)
+    print(request.root_path)
     return render_template('main_page.html')
 
 
@@ -109,9 +111,16 @@ def typing_test():
         if request.headers['title']=='key_listener':# code for key listener
             key = request.get_json() # get the expected key, run the fuction to listen user keyboard and waiting for key press
             exp_key = key['expected_key']
-            key_test = randdom_func
-            res = key_test(exp_key)
+            if exp_key == '_':
+                exp_key = 'space'
+            key_test = k_listener()
+            print('expected key is:', exp_key)
+            print('the pressed key is:', key_test)
+            res = {'result': True} if exp_key ==key_test else {'result':False}
+            if key_test == 'esc':
+                res['result'] = 'Abort'
             return res
+
         if request.headers['title']=='stats': # get the typing stats after typing practice finish
             if current_user.is_authenticated: # if user is authorized - save stats to db
                 stats = request.get_json()
@@ -130,4 +139,4 @@ def typing_test():
         words_list = words_taking(params) 
         words_list = " _ ".join(words_list).split(' ')
         # generate the string with selected words, divided by '_' to represent space key.
-        return render_template('typing_test.html',words_list= words_list, k_listen_f = randdom_func, test_settings = params)
+        return render_template('typing_test.html',words_list= words_list, k_listen_f = k_listener, test_settings = params)
