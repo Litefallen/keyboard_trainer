@@ -1,7 +1,6 @@
 asarPy==1.0.1
 blinker==1.7.0
 click==8.1.7
-evdev==1.7.0
 Flask==3.0.2
 Flask-Login==0.6.3
 greenlet==3.0.3
@@ -11,7 +10,6 @@ keyboard==0.13.5
 MarkupSafe==2.1.5
 packaging==24.1
 psycopg2-binary==2.9.9
-python-xlib==0.33
 six==1.16.0
 SQLAlchemy==2.0.29
 typing_extensions==4.10.0

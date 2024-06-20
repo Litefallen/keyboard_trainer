@@ -62,7 +62,7 @@
 
         async function loadListSequentially(letter) {
         var args = {expected_key: letter}
-        var response = await fetch('http://127.0.0.1:5000//typing_test', {
+        var response = await fetch('http://127.0.0.1//typing_test', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -136,7 +136,7 @@
 
     }
     show_res_table()
-    var stat_res = await fetch('http://127.0.0.1:5000//typing_test', {
+    var stat_res = await fetch('http://127.0.0.1//typing_test', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

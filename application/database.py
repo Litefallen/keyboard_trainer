@@ -3,8 +3,7 @@ import sqlalchemy as sqla
 from sqlalchemy.orm import Session
 from .models import Base, User
 
-engine = sqla.create_engine('sqlite:///instance/application.sqlite', echo=False)
-
+engine = sqla.create_engine('sqlite:///C:/Users/litefallen/Documents/app_from_httpd/keyboard_trainer/instance/application.sqlite', echo=False) # change db path according to your settings
 
 def session_decorator(func): # will use it as decorator to get rid of necessity of manually closing the db connection
     with Session(engine) as session:

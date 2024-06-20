@@ -7,3 +7,5 @@ def k_listener(expected_key):
     return keyboard.read_event().name
 
 print(k_listener('s'))
+
+# print('fuck')
