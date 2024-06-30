@@ -15,7 +15,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Keeps Python from buffering stdout and stderr to avoid situations where
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
-
+# Install sudo
+RUN apt-get update && apt-get install -y sudo
 WORKDIR /app
 
 # Create a non-privileged user that the app will run under.
