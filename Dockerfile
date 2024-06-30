@@ -16,13 +16,17 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-# Update and install necessary packages
-RUN apt-get update && apt-get install -y sudo kbd
+# Update package lists
+RUN apt-get update
 
-# If the above fails, add debugging steps to check the issue:
-RUN echo "Checking if kbd installation was successful" && \
-    dumpkeys --version || \
-    echo "Failed to install kbd"
+# Debugging: Print the list of available packages
+RUN apt-get -qq list > /available_packages.txt
+
+# Install necessary packages
+RUN apt-get install -y sudo kbd || (echo "Installation failed"; apt-get install -y sudo && apt-get install -y kbd)
+
+# Check if the kbd installation was successful
+RUN dumpkeys --version || echo "dumpkeys not found"
 
 # Clean up APT when done
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
