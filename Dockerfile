@@ -15,11 +15,19 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Keeps Python from buffering stdout and stderr to avoid situations where
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
+
 # Update and install necessary packages
-RUN apt-get update && \
-    apt-get install -y sudo kbd && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y sudo kbd
+
+# If the above fails, add debugging steps to check the issue:
+RUN echo "Checking if kbd installation was successful" && \
+    dumpkeys --version || \
+    echo "Failed to install kbd"
+
+# Clean up APT when done
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
 WORKDIR /app
 
 # Create a non-privileged user that the app will run under.
