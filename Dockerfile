@@ -19,13 +19,15 @@ ENV PYTHONUNBUFFERED=1
 # Update package lists
 RUN apt-get update
 
-# Debugging: Print the list of available packages
-RUN apt-get -qq list > /available_packages.txt
 
-# Install necessary packages
-RUN apt-get install -y sudo kbd || (echo "Installation failed"; apt-get install -y sudo && apt-get install -y kbd)
+# Debugging: Print the current state of the package lists
+RUN cat /etc/apt/sources.list && ls -la /var/lib/apt/lists/
 
-# Check if the kbd installation was successful
+
+# Install sudo and kbd packages
+RUN apt-get install -y sudo kbd
+
+# Verify if the kbd installation was successful
 RUN dumpkeys --version || echo "dumpkeys not found"
 
 # Clean up APT when done
