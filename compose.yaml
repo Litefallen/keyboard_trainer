@@ -14,7 +14,6 @@ services:
     user: root
     ports:
       - 8080:5000
-    privileged: true
 #    devices:
 #      - "/dev/uinput:/dev/uinput"
 # The commented out section below is an example of how to define a PostgreSQL
