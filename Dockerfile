@@ -19,7 +19,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 # Update package lists and install necessary packages
 RUN apt-get update && \
-    apt-get install -y sudo kbd && \
+    apt-get install -y sudo && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
