@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 # syntax=docker/dockerfile:1
 
 # Comments are provided throughout this file to help you get started.
