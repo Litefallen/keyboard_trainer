@@ -18,10 +18,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 # Update package lists and install necessary packages
-RUN apt-get update && \
-    apt-get install -y sudo kmod kbd && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+#RUN apt-get update && \
+#    apt-get install -y sudo kmod kbd && \
+#    apt-get clean && \
+#    rm -rf /var/lib/apt/lists/*
 
 # Verify if the kbd installation was successful
 RUN dumpkeys --version || echo "dumpkeys not found"
