@@ -16,26 +16,15 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-# Update package lists
-RUN apt-get update
-
-
-# Debugging: Print the current state of the package lists
-RUN cat /etc/apt/sources.list && ls -la /var/lib/apt/lists/
-
-
-# Install sudo and kbd packages
-RUN apt-get install -y sudo kbd
+WORKDIR /app
+# Update package lists and install necessary packages
+RUN apt-get update && \
+    apt-get install -y sudo kbd && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Verify if the kbd installation was successful
 RUN dumpkeys --version || echo "dumpkeys not found"
-
-# Clean up APT when done
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
-WORKDIR /app
-
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
 ARG UID=10001
