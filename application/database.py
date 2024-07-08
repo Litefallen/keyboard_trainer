@@ -37,16 +37,11 @@ def get_user_by_email(email:str,session):
 @session_decorator
 def update_user_data(user_mail,stats,session):
     user = session.scalars(sqla.select(User).where(User.email == user_mail)).first()
-    print('This is accuracy',user.accuracy)
-    print('This is symbol_p_minute',user.symbol_p_minute)
-
     if not user.accuracy:
-        # print('First test!')
         user.symbol_p_minute = str(stats['symbol_p_minute'])
         user.accuracy = str(stats['accuracy'])
         session.commit()
     else:
-        # print('It is not the first test!')
         user.accuracy = user.accuracy + f" {stats['accuracy']}"
         user.symbol_p_minute = user.symbol_p_minute + f" {stats['symbol_p_minute']}"
         session.commit()

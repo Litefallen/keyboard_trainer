@@ -62,14 +62,16 @@
 
         async function loadListSequentially(letter) {
         var args = {expected_key: letter}
-        var response = await fetch('https://keyboardtrainer-production.up.railway.app//typing_test', {
+        var response = await fetch('https://27bf-2a02-8308-f090-ed00-00-a8fe.ngrok-free.app//typing_test', { //change according to your hosting
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'title': 'key_listener'
                 },
+                // credentials: 'include',
                 body: JSON.stringify(args)
             })
+
         var data = await response.json();
         return data['result']
         }
@@ -79,9 +81,13 @@
 
         async function to_Start(){
             press_enter = await loadListSequentially('enter');
+            if (press_enter=='Abort'){
+                location.replace("/");
+            }
             if (press_enter!=true){
                 await to_Start();
             }
+  
             else{res_section.style.display = 'none';}
         }
     var words_list = '{{words_list|list|join(" ")}}'
@@ -136,12 +142,13 @@
 
     }
     show_res_table()
-    var stat_res = await fetch('https://keyboardtrainer-production.up.railway.app//typing_test', {
+    var stat_res = await fetch('https://27bf-2a02-8308-f090-ed00-00-a8fe.ngrok-free.app//typing_test', { //change according to your hosting
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'title':'stats'
                 },
+                // credentials: 'include',
                 body: JSON.stringify(stat_data)
             })
     stat_stat_res = await stat_res.json()

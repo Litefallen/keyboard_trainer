@@ -10,13 +10,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 
-
-
-
 auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/login', methods = ['POST', 'GET'])
 def login(): # get email from request, try to get the user from db, if user exists - redirect to profile page, if not - flash notification. Check for correct password as well.
-    print('login request page')
+    # print('login request page')
     if request.method == 'POST':
         email = request.form['email'].strip()
         password = str(request.form['password'])
@@ -78,6 +75,8 @@ user_profile_bp = Blueprint('profile', __name__) # profile page with stats
 @user_profile_bp.route('/profile', methods=['GET','POST'])
 @login_required
 def profile():
+    
+
     user = get_user_by_email(current_user.email)
     if user.accuracy:
         avg_accuracy = [float(i) for i in user.accuracy.split()]
@@ -100,13 +99,14 @@ def update_data():
 views = Blueprint('views', __name__) # main page
 @views.route('/')
 def main():
-    print(request.server)
-    print(request.root_path)
+    # print(request.server)
+    # print(request.root_path)
     return render_template('main_page.html')
 
 
 @views.route('/typing_test', methods = ["GET", "POST"]) # typing practice
 def typing_test():
+    print('this is a cur user',current_user)
     if request.method == 'POST': 
         if request.headers['title']=='key_listener':# code for key listener
             key = request.get_json() # get the expected key, run the fuction to listen user keyboard and waiting for key press
@@ -120,18 +120,15 @@ def typing_test():
             if key_test == 'esc':
                 res['result'] = 'Abort'
             return res
-
         if request.headers['title']=='stats': # get the typing stats after typing practice finish
             if current_user.is_authenticated: # if user is authorized - save stats to db
                 stats = request.get_json()
-                print('this is stats', stats)
                 user_mail =current_user.email
                 return update_user_data(user_mail,stats)
             else:
                 print('unauthorized user')
-        
     if request.method == 'GET':
-        params = rand_test() # create defult settings for typing practice
+        params = rand_test() # create default settings for typing practice
         if 'letter' in request.args: # replace default settings if specific settings are provided
             params['letter'] = dict(request.args)['letter'].strip('/')
         if 'string_length' in request.args:

@@ -11,7 +11,7 @@ def rand_test(): # get random letter and word quantity for typing practice
 def words_taking(val_dict:dict[str,int]): # get words from dictionary file using letter and string_length parameters. String length - amount of words taken from dictionary.
     with open('./application/sorted_words.json', 'r') as json_f: #Change the path according to your settings
         json_words_dict = json.load(json_f)
-        return [json_words_dict[val_dict['letter']][randint(0, len(json_words_dict[val_dict['letter']]))] for _ in range(val_dict['string_length'])]
+        return [json_words_dict[val_dict['letter']][randint(0, len(json_words_dict[val_dict['letter']])-1)] for _ in range(val_dict['string_length'])]
 
 def word_freq_sort(): # sort words by most frequent letter
     from collections import Counter

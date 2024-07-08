@@ -5,9 +5,11 @@ from flask_login import LoginManager
 from .models import User
 from .database import get_user
 
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+    
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_profile_bp)
     app.register_blueprint(views)
@@ -22,7 +24,8 @@ def create_app(test_config=None):
     else:
         # load the test config if passed in
         app.config.from_mapping(test_config)
-
+    # app.config['SESSION_COOKIE_HTTPONLY'] = False
+    # app.config['SESSION_COOKIE_SECURE'] = False 
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
